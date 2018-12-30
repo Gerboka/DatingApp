@@ -1,0 +1,8 @@
+<!--Ahhoz ,hogy kinyerjük a value GetValues által megszerzett változókat amiket
+az adatbázisból szerezünk át kell őket tenni a html oldalra is.
+erre jó az ngFor angular metódus-->
+<p *ngFor="let value of values">
+  <!--Így pedig felsoroltatjuk a kapott elemeket a value. utáni rész az 
+  adatbázis oszlop nevével megyezzezőnek kell lenni-->
+ Ez az id-ja {{value.id}} , Ez a neve {{value.name}}
+</p>
