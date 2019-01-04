@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers
-{
+{   /* Ezzel az authorize külcsszóval meglehet adni, hogy azonosítás kell ehhez a controllerhez
+     Ehhez kell viszont egy authentication middleware session 3 lecture 34   */
+    [Authorize] 
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
@@ -59,6 +62,8 @@ namespace DatingApp.API.Controllers
 
 
         // GET api/values/5
+        //Az AllowAnonymus parancsar bárki lekérheti ezt a parancsot [Authorize] -kel az osztály elejére ehhez a funkcióhoz
+        [AllowAnonymous]
         [HttpGet("{id}")]
         /*Az eredeti specifikusan egy value értéket kinyerő metódust átszerkesztjük,
         hogy az adatbázisból nyerje ki az adatokat

@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DatingApp.API
 {
@@ -32,8 +34,20 @@ namespace DatingApp.API
             configurációs fájlokban megadott ConnectionString beállítás DefaulConnection-éből kinyertük a stringet */
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            //Ezt a sot a .NET API és az Aungular közötti megosztás miatt írtuk be
+            //Ezt a sor a .NET API és az Aungular közötti megosztás miatt írtuk be
             services.AddCors();
+            //Service ként hozzá adjok a programhoz az AuthRepositori interfész ést az AuthReposutory osztály
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            //Ez az authentication-hoz kell, hogy tudjuk a controllerekben haasnálni ki melyik aprancsot hívhatja meg
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>{
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                    ValidateIssuer = false,
+                };
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +66,9 @@ namespace DatingApp.API
             //Ezzal a sorral engedélyezzük az Origin,Header, És minden Method parancs
             // hozzáférését más programból jelen esetben az Angularból
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()); 
+            //Ezt az induláshoz hozzá kel adni, hogy működjön a zauthentikáció így működni 
+            //fog a Controllerekben a hozzá férés szabályozás
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

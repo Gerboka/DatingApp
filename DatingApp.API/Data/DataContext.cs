@@ -2,7 +2,8 @@ using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Data
-{   // Ez az osztály felelős az adatbázis kapcsolatért. Az osztály az EntityFramework segítségétvel küld utasítést, és adatokat kap vissza
+{   // Ez az osztály felelős az adatbázis kapcsolatért. Az osztály az EntityFramework segítségétvel küld 
+    //utasítást, és adatokat kap vissza
     //az EntytiFramework által!
 
     //A DataContext osztályunkat a DbContext gyári osztályból származtatjuk, így
@@ -17,5 +18,6 @@ namespace DatingApp.API.Data
         //Ezzel az eljárással az adatbázisban lévő Value értékét átadja a táblázat Values táblázatába
         //Ehhez referenciába be kellet írni using DatingApp.API.Models; , hogy lássa a Value osztályt.
         public DbSet<Value> Values { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
